@@ -14,6 +14,13 @@ void moveForward(node* &headNode, int spaces ){
         headNode = headNode->next;
     }
 }
+void moveBack(node* &headNode, node* temp, int numSquares, int currentSquare){
+    headNode = temp;
+    int newSquare = currentSquare - numSquares;
+    for(int i = newSquare; i > 0; i--){
+        headNode = headNode->next;
+    }
+}
 void generateValues(int(&vals)[], int size){
     for(int i = 0; i < size; i++)
     {
