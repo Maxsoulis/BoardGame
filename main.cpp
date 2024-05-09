@@ -29,13 +29,23 @@ void generateValues(int(&vals)[], int size){
         vals[i] = value;
     }
 }
+void printBoard(node* headNode){
+    
+
+}
 int main() {
     // Write C++ code here
     srand((unsigned) time(NULL));
+    
     node* temp = nullptr;
     node* head;
     node* result;
-    int squares = 16;
+    int squares = 17;
+    if(squares % 10 != 0){
+        cout << "Error, Invalid Size" << '\n';
+        return 0;
+    }
+    
     int values[squares];
     generateValues(values, squares);
     for(int i = 16; i > 0; i-- ){
@@ -45,9 +55,19 @@ int main() {
         result->next = temp;
         temp = result;
     }
-    
+    char rollDice;
+    cout << "Enter r to roll the dice" << '\n';
     while(head != NULL){
-        head = head->next;
+          
+         while(true){
+             cin >> rollDice;
+             if(rollDice == 'r'){
+                 int moves = rand() % 6 + 1;
+                 moveForward(head, moves);
+                 break;
+             }
+             else cout <<
+         }
     }
     std::cout << "Try programiz.pro";
 
