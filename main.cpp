@@ -1,5 +1,7 @@
 // Online C++ compiler to run C++ program online
 #include <iostream>
+#include <stdlib.h> 
+using std::cin;
 using std::cout;
 struct node{
     int value, position;
@@ -8,11 +10,20 @@ struct node{
     node(int value, node * p): value(value), next(p) {}
     ~node(){}
 };
-void moveForward(node* &headNode, int spaces ){
+int moveForward(node* &headNode, int spaces ){
     for(int i = 0; i < spaces; i++)
     {
+        if(headNode->next == NULL){
+            cout << "You hit a + " << headNode->value << '\n';
+            int addscore = headNode->value;
+            headNode = NULL;
+            return addscore;
+        }
         headNode = headNode->next;
     }
+        cout << "You hit a + " << headNode->value << '\n';
+        return headNode->value;
+    
 }
 void moveBack(node* &headNode, node* temp, int numSquares, int currentSquare){
     headNode = temp;
@@ -40,15 +51,15 @@ int main() {
     node* temp = nullptr;
     node* head;
     node* result;
-    int squares = 17;
-    if(squares % 10 != 0){
+    int squares = 16;
+    if(squares % 2 != 0){
         cout << "Error, Invalid Size" << '\n';
         return 0;
     }
     
     int values[squares];
     generateValues(values, squares);
-    for(int i = 16; i > 0; i-- ){
+    for(int i = 25; i > 0; i-- ){
         result = new node();
         result->value = values[i-1];
         result->position = i;
@@ -56,20 +67,27 @@ int main() {
         temp = result;
     }
     char rollDice;
-    cout << "Enter r to roll the dice" << '\n';
+    int playerScore = 0;
+    head = temp;
     while(head != NULL){
-          
+        
+         cout << "Score: " << playerScore << '\n';
          while(true){
+             cout << "Enter r to roll the dice" << '\n';
              cin >> rollDice;
+              
              if(rollDice == 'r'){
                  int moves = rand() % 6 + 1;
-                 moveForward(head, moves);
+                 cout << "You rolled a " <<  moves << '\n';
+                 int addToScore = moveForward(head, moves);
+                 playerScore+= addToScore;
                  break;
              }
-             else cout <<
          }
+      
+         
     }
-    std::cout << "Try programiz.pro";
+    std::cout << "Final Score " << playerScore;
 
     return 0;
 }
