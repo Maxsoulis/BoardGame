@@ -33,18 +33,25 @@ void moveBack(node* &headNode, node* temp, int numSquares, int currentSquare){
     }
 }
 void generateValues(int(&vals)[], int size){
+    
     for(int i = 0; i < size; i++)
     {
         int subtract = rand() % 10;
         int value = rand() % 10 - subtract;
+        if(value == 0){
+            value += 1;
+        }
         vals[i] = value;
+        
     }
+        
+    
 }
-void printBoard(node* headNode, int size){
+void printBoard(node* headNode, node* temp, int size){
+    headNode = temp;
     int row = size/4;
-    int totalSpacesOnTop = (size/2) + (size/4) - 1;
+    int totalSpacesOnTop = (size/2) + (size/4) - 1 ;
     int difference =  totalSpacesOnTop - 4;
-    int totalSpaces = size/2 + (difference - 10);
     for(int i = 0; i < row; i++){
         if(headNode -> value >= 0){
         cout << "+" <<  headNode->value << " " ;
@@ -63,7 +70,8 @@ void printBoard(node* headNode, int size){
         else
         {cout << headNode->value;}
         headNode = headNode ->next;
-        for(int i = 0; i <  size; i++){
+        
+        for(int i = 0; i <  difference; i++){
             cout << " ";
         }
         if(headNode->value >= 0)
@@ -89,7 +97,7 @@ int main() {
     node* temp = nullptr;
     node* head;
     node* result;
-    int squares = 20;
+    int squares = 64;
     if((squares % 4 != 0) || squares >= 100 || squares < 16 ){
         cout << "Error, Invalid Size" << '\n';
         return 0;
@@ -108,7 +116,7 @@ int main() {
     int playerScore = 0;
     head = temp;
     while(head != NULL){
-        printBoard(head, squares);
+        printBoard(head, temp, squares);
          cout << "Score: " << playerScore << '\n';
          while(true){
              cout << "Enter r to roll the dice" << '\n';
@@ -119,6 +127,7 @@ int main() {
                  cout << "You rolled a " <<  moves << '\n';
                  int addToScore = moveForward(head, moves);
                  playerScore+= addToScore;
+                 head->value = 0;
                  break;
              }
          }
