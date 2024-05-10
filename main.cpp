@@ -43,16 +43,40 @@ void generateValues(int(&vals)[], int size){
 void printBoard(node* headNode, int size){
     int row = size/4;
     for(int i = 0; i < row; i++){
-        cout << headNode->value;
+        if(headNode -> value >= 0){
+        cout << "+" <<  headNode->value << " " ;
+        }
+        else{
+            cout << headNode -> value << " ";
+        }
+        headNode = headNode ->next;
+        size -=1;
     }
-    for(int i = 0; i > row; i -=2){
-        cout << headNode->value;
-        for(int i = 0; i < row - 2; i++){
+    cout << '\n';
+    for(int i = size; i >row ; i -= 2){
+        if(headNode -> value >= 0){
+            cout << "+" << headNode ->value;
+        }
+        else
+        {cout << headNode->value;}
+        headNode = headNode ->next;
+        for(int i = 0; i < (row*2) + (row/4); i++){
             cout << " ";
         }
-        cout << headNode->value << '\n';
+        if(headNode->value >= 0)
+        {cout << "+" <<  headNode->value << '\n';}
+        else
+        {cout << headNode->value << '\n';}
+        headNode = headNode -> next;
     }
-
+    for(int i = 0; i < row; i++){
+        if(headNode->value >= 0){
+            cout << "+" <<  headNode->value << " ";
+        }
+        else
+       { cout << headNode -> value << " ";}
+        headNode = headNode ->next;
+    }
 }
 int main() {
     // Write C++ code here
@@ -61,7 +85,7 @@ int main() {
     node* temp = nullptr;
     node* head;
     node* result;
-    int squares = 16;
+    int squares = 32;
     if((squares % 4 != 0) || squares >= 100 || squares < 16 ){
         cout << "Error, Invalid Size" << '\n';
         return 0;
@@ -69,7 +93,7 @@ int main() {
     
     int values[squares];
     generateValues(values, squares);
-    for(int i = 25; i > 0; i-- ){
+    for(int i = squares; i > 0; i-- ){
         result = new node();
         result->value = values[i-1];
         result->position = i;
@@ -80,7 +104,7 @@ int main() {
     int playerScore = 0;
     head = temp;
     while(head != NULL){
-        
+        printBoard(head, squares);
          cout << "Score: " << playerScore << '\n';
          while(true){
              cout << "Enter r to roll the dice" << '\n';
