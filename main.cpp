@@ -42,6 +42,9 @@ void generateValues(int(&vals)[], int size){
 }
 void printBoard(node* headNode, int size){
     int row = size/4;
+    int totalSpacesOnTop = (size/2) + (size/4) - 1;
+    int difference =  totalSpacesOnTop - 4;
+    int totalSpaces = size/2 + (difference - 10);
     for(int i = 0; i < row; i++){
         if(headNode -> value >= 0){
         cout << "+" <<  headNode->value << " " ;
@@ -60,7 +63,7 @@ void printBoard(node* headNode, int size){
         else
         {cout << headNode->value;}
         headNode = headNode ->next;
-        for(int i = 0; i < (row*2) + (row/4); i++){
+        for(int i = 0; i <  size; i++){
             cout << " ";
         }
         if(headNode->value >= 0)
@@ -77,6 +80,7 @@ void printBoard(node* headNode, int size){
        { cout << headNode -> value << " ";}
         headNode = headNode ->next;
     }
+    cout << '\n';
 }
 int main() {
     // Write C++ code here
@@ -85,7 +89,7 @@ int main() {
     node* temp = nullptr;
     node* head;
     node* result;
-    int squares = 32;
+    int squares = 20;
     if((squares % 4 != 0) || squares >= 100 || squares < 16 ){
         cout << "Error, Invalid Size" << '\n';
         return 0;
