@@ -6,6 +6,7 @@ using std::cout;
 struct node{
     int value, position;
     struct node* next;
+    struct node* prev;
         node(){}
     node(int value, node * p): value(value), next(p) {}
     ~node(){}
@@ -41,14 +42,15 @@ void generateValues(int(&vals)[], int size){
         if(value == 0){
             value += 1;
         }
+        cout << value << '\n';
         vals[i] = value;
         
     }
         
     
 }
-void printBoard(node* headNode, node* temp, int size){
-    headNode = temp;
+void printBoard(node* headNode, int size){
+   
     int row = size/4;
     int totalSpacesOnTop = (size/2) + (size/4) - 1 ;
     int difference =  totalSpacesOnTop - 4;
@@ -91,37 +93,62 @@ void printBoard(node* headNode, node* temp, int size){
     cout << '\n';
 }
 int main() {
+   
+    
     // Write C++ code here
     srand((unsigned) time(NULL));
-    
-    node* temp = nullptr;
-    node* head;
-    node* result;
-    int squares = 64;
+ 
+    node* temp = new node();
+    node* last ;
+    node* head = NULL;
+    node* result  ;
+    int squares = 16;
     if((squares % 4 != 0) || squares >= 100 || squares < 16 ){
         cout << "Error, Invalid Size" << '\n';
         return 0;
     }
-    
+ 
     int values[squares];
     generateValues(values, squares);
+ 
     for(int i = squares; i > 0; i-- ){
-        result = new node();
-        result->value = values[i-1];
-        result->position = i;
-        result->next = temp;
-        temp = result;
+     
+            
+            if(i == squares){
+                result = new node();
+                result->value = values[i];
+                result->position = i;
+                result ->prev = NULL;
+                head = result;
+                temp = result;
+                
+                
+            }
+            else{
+            result = new node();
+            result->value = values[i ];
+            result->position = i;
+            result->prev = temp;
+            temp-> next = result;
+             
+            temp = result; 
+            }
+            cout << "Value of " << i << " "  << values[i] << '\n';
     }
     char rollDice;
     int playerScore = 0;
-    head = temp;
+ 
+     
+ 
+  
+    
     while(head != NULL){
-        printBoard(head, temp, squares);
+        printBoard(head , squares);
          cout << "Score: " << playerScore << '\n';
          while(true){
              cout << "Enter r to roll the dice" << '\n';
              cin >> rollDice;
-              
+           
              if(rollDice == 'r'){
                  int moves = rand() % 6 + 1;
                  cout << "You rolled a " <<  moves << '\n';
