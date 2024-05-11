@@ -49,8 +49,8 @@ void generateValues(int(&vals)[], int size){
         
     
 }
-void printBoard(node* headNode, int size){
-   
+void printBoard(node* headNode,node* temp,  int size){
+   headNode = temp;
     int row = size/4;
     int totalSpacesOnTop = (size/2) + (size/4) - 1 ;
     int difference =  totalSpacesOnTop - 4;
@@ -101,6 +101,7 @@ int main() {
     node* temp = new node();
     node* last ;
     node* head = NULL;
+    node* copyOfHead;
     node* result  ;
     int squares = 16;
     if((squares % 4 != 0) || squares >= 100 || squares < 16 ){
@@ -120,6 +121,7 @@ int main() {
                 result->position = i;
                 result ->prev = NULL;
                 head = result;
+                copyOfHead = result;
                 temp = result;
                 
                 
@@ -143,7 +145,7 @@ int main() {
   
     
     while(head != NULL){
-        printBoard(head , squares);
+         printBoard(head , copyOfHead, squares);
          cout << "Score: " << playerScore << '\n';
          while(true){
              cout << "Enter r to roll the dice" << '\n';
