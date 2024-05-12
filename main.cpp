@@ -137,40 +137,37 @@ int main() {
             temp = result; 
             }
             last = temp;
-            
-            
-
     }
     copyOfLast = last;
     char rollDice;
     int playerScore = 0;
- 
-     
- 
-  
-    
+    int previousValue = head->value;
     while(head != NULL){
          printBoard(head , copyOfHead, last,copyOfLast , squares);
          cout << "Score: " << playerScore << '\n';
          while(true){
-             cout << "Enter r to roll the dice" << '\n';
-             cin >> rollDice;
-            
+            cout << "Enter r to roll the dice" << '\n';
+            cin >> rollDice;
+            head->value = previousValue;
+            cout << "Setting value to " << previousValue << '\n';
              if(rollDice == 'r'){
                  int moves = rand() % 6 + 1;
                  
                  cout << "You rolled a " <<  moves << '\n';
                  int addToScore = moveForward(head, moves);
-                 cout << head->prev -> value << '\n';
                  playerScore+= addToScore;
-                 head->value = 0;
+                 if(head != NULL){
+                 previousValue = head->value;
+                 head->value = 0;}
+                 else{ cout << "Final Score" << playerScore;
+                 return 0;}
                  break;
              }
          }
       
          
     }
-    std::cout << "Final Score " << playerScore;
+    
 
     return 0;
 }
