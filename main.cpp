@@ -4,6 +4,7 @@
 using std::cin;
 using std::cout;
 struct node{
+    string squareType; 
     int value, position;
     struct node* next;
     struct node* prev;
@@ -13,10 +14,10 @@ struct node{
 };
 void printValue(int value){
     if(value > 0){
-        cout << "+" << value << " " ;
+        cout <<  "+" << value << " " ;
     }
     else if(value == 0){
-        cout << " P ";
+        cout <<  " P ";
     }
     else{
         cout << value << " " ;
@@ -33,16 +34,29 @@ int moveForward(node* &headNode, int spaces ){
         }
         headNode = headNode->next;
     }
-        cout << "You hit a + " << headNode->value << '\n';
+        cout << "You hit a ";
+        printValue(headNode->value) ;
+        cout << '\n';
         return headNode->value;
     
 }
-void moveBack(node* &headNode, node* temp, int numSquares, int currentSquare){
-    headNode = temp;
-    int newSquare = currentSquare - numSquares;
-    for(int i = newSquare; i > 0; i--){
-        headNode = headNode->next;
+int moveBack(node* &headNode,node* firstNode, int numSquares ){
+     
+    for(int i = 0; i < numSquares; i++){
+        if(headNode->prev == NULL){
+            headNode = firstNode;
+            cout << "You hit a ";
+            printValue(headNode->value) ;
+            cout << '\n';
+            return headNode->value;
+            
+        }
+            headNode = headNode->prev;
     }
+    cout << "You hit a ";
+    printValue(headNode->value);
+    cout << '\n';
+    return headNode->value;
 }
 void generateValues(int(&vals)[], int size){
     
@@ -54,10 +68,7 @@ void generateValues(int(&vals)[], int size){
             value += 1;
         }
         vals[i] = value;
-        
     }
-        
-    
 }
 void printBoard(node* headNode,node* resetHead, node* last, node* resetLast, int size){
    headNode = resetHead;
@@ -82,25 +93,19 @@ void printBoard(node* headNode,node* resetHead, node* last, node* resetLast, int
         last = last->prev;
         headNode = headNode->next;
         cout << '\n';
-        
     }
     //prints bottom row
     for(int i = 0; i < row; i++){
         printValue(last->value);
         last = last->prev;
-        
     }
-    
     cout << '\n';
 }
 int main() {
-   
-    
-    // Write C++ code here
     srand((unsigned) time(NULL));
  
-    node* temp = new node();
-    node* last ;
+    node* temp;
+    node* last = NULL ;
     node* head = NULL;
     node* copyOfHead;
     node* copyOfLast;
@@ -142,6 +147,7 @@ int main() {
     char rollDice;
     int playerScore = 0;
     int previousValue = head->value;
+     
     while(head != NULL){
          printBoard(head , copyOfHead, last,copyOfLast , squares);
          cout << "Score: " << playerScore << '\n';
@@ -149,12 +155,12 @@ int main() {
             cout << "Enter r to roll the dice" << '\n';
             cin >> rollDice;
             head->value = previousValue;
-            cout << "Setting value to " << previousValue << '\n';
              if(rollDice == 'r'){
                  int moves = rand() % 6 + 1;
                  
                  cout << "You rolled a " <<  moves << '\n';
                  int addToScore = moveForward(head, moves);
+                 
                  playerScore+= addToScore;
                  if(head != NULL){
                  previousValue = head->value;
