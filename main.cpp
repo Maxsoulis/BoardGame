@@ -12,16 +12,30 @@ struct node{
     node(int value, node * p): value(value), next(p) {}
     ~node(){}
 };
-void printValue(int value){
+void printSquare(string type, int value){
+    string positive;
     if(value > 0){
-        cout <<  "+" << value << " " ;
+        positive = "+";
     }
-    else if(value == 0){
-        cout <<  " P ";
-    }
-    else{
-        cout << value << " " ;
-    }
+   switch(type){
+       case "!": {
+           cout << " ! ";
+           break;
+       }
+       case "P":{
+           cout << " P ";
+           break;
+       }
+       case "M": {
+           cout << "M" << positive << value << " ";
+           break;
+       }
+       case "S": {
+           cout << "S" << positive << value << " ";
+           break;
+       }
+       
+   }
 }
 int moveForward(node* &headNode, int spaces ){
     for(int i = 0; i < spaces; i++)
@@ -35,7 +49,7 @@ int moveForward(node* &headNode, int spaces ){
         headNode = headNode->next;
     }
         cout << "You hit a ";
-        printValue(headNode->value) ;
+        printSquare(headNode->value) ;
         cout << '\n';
         return headNode->value;
     
@@ -46,7 +60,7 @@ int moveBack(node* &headNode,node* firstNode, int numSquares ){
         if(headNode->prev == NULL){
             headNode = firstNode;
             cout << "You hit a ";
-            printValue(headNode->value) ;
+            printSquare (headNode->value) ;
             cout << '\n';
             return headNode->value;
             
@@ -54,7 +68,7 @@ int moveBack(node* &headNode,node* firstNode, int numSquares ){
             headNode = headNode->prev;
     }
     cout << "You hit a ";
-    printValue(headNode->value);
+    printSquare (headNode->value);
     cout << '\n';
     return headNode->value;
 }
@@ -78,25 +92,25 @@ void printBoard(node* headNode,node* resetHead, node* last, node* resetLast, int
     int difference =  totalSpacesOnTop - 5;
     //prints top row
     for(int i = 0; i < row; i++){
-        printValue(headNode->value);
+        printSquare (headNode->value);
         headNode = headNode ->next;
         size -=1;
     }
     cout << '\n';
     //prints sides
     for(int i = size; i > row; i-=2){
-        printValue(last-> value);
+        printSquare (last-> value);
         for(int i = 0; i < difference; i++){
             cout << " ";
         }
-        printValue(headNode-> value);
+        printSquare (headNode-> value);
         last = last->prev;
         headNode = headNode->next;
         cout << '\n';
     }
     //prints bottom row
     for(int i = 0; i < row; i++){
-        printValue(last->value);
+        printSquare (last->value);
         last = last->prev;
     }
     cout << '\n';
