@@ -11,6 +11,17 @@ struct node{
     node(int value, node * p): value(value), next(p) {}
     ~node(){}
 };
+void printValue(int value){
+    if(value > 0){
+        cout << "+" << value << " " ;
+    }
+    else if(value == 0){
+        cout << " P ";
+    }
+    else{
+        cout << value << " " ;
+    }
+}
 int moveForward(node* &headNode, int spaces ){
     for(int i = 0; i < spaces; i++)
     {
@@ -43,7 +54,6 @@ void generateValues(int(&vals)[], int size){
             value += 1;
         }
         vals[i] = value;
-        cout << value << '\n';
         
     }
         
@@ -53,44 +63,30 @@ void printBoard(node* headNode,node* resetHead, node* last, node* resetLast, int
    headNode = resetHead;
     int row = size/4;
     int totalSpacesOnTop = (size/2) + (size/4) - 1 ;
-    int difference =  totalSpacesOnTop - 4;
-    //top row
+    //four  for the top beginning and end two characters and one for the extra space created in the print function
+    int difference =  totalSpacesOnTop - 5;
+    //prints top row
     for(int i = 0; i < row; i++){
-         if(headNode -> value >= 0){
-        cout << "+" <<  headNode->value << " " ;
-        }
-        else{
-            cout << headNode -> value << " ";
-        }
+        printValue(headNode->value);
         headNode = headNode ->next;
         size -=1;
     }
     cout << '\n';
-    //sides
+    //prints sides
     for(int i = size; i > row; i-=2){
-         if(last ->value > 0){
-             cout << "+" << last->value;
-         }
-         else cout << last->value;
+        printValue(last-> value);
         for(int i = 0; i < difference; i++){
             cout << " ";
         }
-        if(headNode ->value > 0){
-            cout << "+" << headNode->value << " ";
-        }
-        else{
-            cout << headNode ->value << " ";
-        }
+        printValue(headNode-> value);
         last = last->prev;
         headNode = headNode->next;
         cout << '\n';
         
     }
+    //prints bottom row
     for(int i = 0; i < row; i++){
-        if(last ->value > 0){
-            cout << "+" << last->value << " ";
-        }
-        else {cout << last->value << " ";}
+        printValue(last->value);
         last = last->prev;
         
     }
@@ -109,7 +105,7 @@ int main() {
     node* copyOfHead;
     node* copyOfLast;
     node* result  ;
-    int squares = 16;
+    int squares = 24;
     if((squares % 4 != 0) || squares >= 100 || squares < 16 ){
         cout << "Error, Invalid Size" << '\n';
         return 0;
@@ -146,7 +142,6 @@ int main() {
 
     }
     copyOfLast = last;
-    cout << last->prev->value << '\n'; 
     char rollDice;
     int playerScore = 0;
  
