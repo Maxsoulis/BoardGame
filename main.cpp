@@ -42,20 +42,21 @@ void generateValues(int(&vals)[], int size){
         if(value == 0){
             value += 1;
         }
-        cout << value << '\n';
         vals[i] = value;
+        cout << value << '\n';
         
     }
         
     
 }
-void printBoard(node* headNode,node* temp,  int size){
-   headNode = temp;
+void printBoard(node* headNode,node* resetHead, node* last, node* resetLast, int size){
+   headNode = resetHead;
     int row = size/4;
     int totalSpacesOnTop = (size/2) + (size/4) - 1 ;
     int difference =  totalSpacesOnTop - 4;
+    //top row
     for(int i = 0; i < row; i++){
-        if(headNode -> value >= 0){
+         if(headNode -> value >= 0){
         cout << "+" <<  headNode->value << " " ;
         }
         else{
@@ -65,31 +66,35 @@ void printBoard(node* headNode,node* temp,  int size){
         size -=1;
     }
     cout << '\n';
-    for(int i = size; i >row ; i -= 2){
-        if(headNode -> value >= 0){
-            cout << "+" << headNode ->value;
-        }
-        else
-        {cout << headNode->value;}
-        headNode = headNode ->next;
-        
-        for(int i = 0; i <  difference; i++){
+    //sides
+    for(int i = size; i > row; i-=2){
+         if(last ->value > 0){
+             cout << "+" << last->value;
+         }
+         else cout << last->value;
+        for(int i = 0; i < difference; i++){
             cout << " ";
         }
-        if(headNode->value >= 0)
-        {cout << "+" <<  headNode->value << '\n';}
-        else
-        {cout << headNode->value << '\n';}
-        headNode = headNode -> next;
+        if(headNode ->value > 0){
+            cout << "+" << headNode->value << " ";
+        }
+        else{
+            cout << headNode ->value << " ";
+        }
+        last = last->prev;
+        headNode = headNode->next;
+        cout << '\n';
+        
     }
     for(int i = 0; i < row; i++){
-        if(headNode->value >= 0){
-            cout << "+" <<  headNode->value << " ";
+        if(last ->value > 0){
+            cout << "+" << last->value << " ";
         }
-        else
-       { cout << headNode -> value << " ";}
-        headNode = headNode ->next;
+        else {cout << last->value << " ";}
+        last = last->prev;
+        
     }
+    
     cout << '\n';
 }
 int main() {
@@ -102,6 +107,7 @@ int main() {
     node* last ;
     node* head = NULL;
     node* copyOfHead;
+    node* copyOfLast;
     node* result  ;
     int squares = 16;
     if((squares % 4 != 0) || squares >= 100 || squares < 16 ){
@@ -117,7 +123,7 @@ int main() {
             
             if(i == squares){
                 result = new node();
-                result->value = values[i];
+                result->value = values[i - 1];
                 result->position = i;
                 result ->prev = NULL;
                 head = result;
@@ -128,15 +134,19 @@ int main() {
             }
             else{
             result = new node();
-            result->value = values[i ];
+            result->value = values[i -1];
             result->position = i;
             result->prev = temp;
             temp-> next = result;
-             
             temp = result; 
             }
-            cout << "Value of " << i << " "  << values[i] << '\n';
+            last = temp;
+            
+            
+
     }
+    copyOfLast = last;
+    cout << last->prev->value << '\n'; 
     char rollDice;
     int playerScore = 0;
  
@@ -145,16 +155,18 @@ int main() {
   
     
     while(head != NULL){
-         printBoard(head , copyOfHead, squares);
+         printBoard(head , copyOfHead, last,copyOfLast , squares);
          cout << "Score: " << playerScore << '\n';
          while(true){
              cout << "Enter r to roll the dice" << '\n';
              cin >> rollDice;
-           
+            
              if(rollDice == 'r'){
                  int moves = rand() % 6 + 1;
+                 
                  cout << "You rolled a " <<  moves << '\n';
                  int addToScore = moveForward(head, moves);
+                 cout << head->prev -> value << '\n';
                  playerScore+= addToScore;
                  head->value = 0;
                  break;
