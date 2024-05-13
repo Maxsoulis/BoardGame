@@ -53,17 +53,17 @@ int moveBack(node* &headNode,node* firstNode, int numSquares ){
         }
             headNode = headNode->prev;
     }
-    cout << "You hit a ";
-    printSquare (headNode->type, headNode->value);
-    cout << '\n';
+   
     return headNode->value;
 }
 int moveForward(node* &headNode,node* firstNode, int spaces ){
+     
+    int addscore = 0;
     for(int i = 0; i < spaces; i++)
     {
         if(headNode->next == NULL){
             cout << "You hit a +" << headNode->value << '\n';
-            int addscore = headNode->value;
+             addscore = headNode->value;
             headNode = NULL;
             return addscore;
         }
@@ -72,6 +72,9 @@ int moveForward(node* &headNode,node* firstNode, int spaces ){
     // checking if the next square type is a move tile
     while(true)
         {if(headNode->type == 'M'){
+            cout << "You hit a ";
+            printSquare(headNode->type, headNode->value);
+            cout << '\n';
             if(headNode ->value > 0)
             {for(int i = 0; i< headNode->value; i++){
                 headNode = headNode->next;
@@ -87,10 +90,12 @@ int moveForward(node* &headNode,node* firstNode, int spaces ){
         
             
         }
+        
         cout << "You hit a ";
         printSquare(headNode->type, headNode->value) ;
         cout << '\n';
-        return headNode->value;
+        addscore = headNode->value;
+        return addscore;
     
 }
  
@@ -238,12 +243,15 @@ int main() {
             temp = result; 
             temp->next = result;
             last = temp;
+            last->next = NULL;
             }
     }
+     
     copyOfLast = last;
     char rollDice;
     int playerScore = 0;
     int previousValue = head->value;
+    
      //main game loop
     while(head != NULL){
         
@@ -255,11 +263,8 @@ int main() {
             head->value = previousValue;
              if(rollDice == 'r'){
                  int moves = rand() % 6 + 1;
-                 
                  cout << "You rolled a " <<  moves << '\n';
                  int addToScore = moveForward(head,firstNode, moves);
-                 if(head ->type = '!'){
-                 }
                  playerScore+= addToScore;
                  if(head != NULL){
                  previousValue = head->value;
