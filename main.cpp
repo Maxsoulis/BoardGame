@@ -1,10 +1,12 @@
 // Online C++ compiler to run C++ program online
 #include <iostream>
 #include <stdlib.h> 
+#include <string>
+using std::string;
 using std::cin;
 using std::cout;
 struct node{
-    string squareType; 
+    char type; 
     int value, position;
     struct node* next;
     struct node* prev;
@@ -12,47 +14,31 @@ struct node{
     node(int value, node * p): value(value), next(p) {}
     ~node(){}
 };
-void printSquare(string type, int value){
+void printSquare(char type, int value){
     string positive;
     if(value > 0){
         positive = "+";
     }
+   if(value == 0 && type != '!'){
+        cout << " P  ";
+        return;
+    }
+    
    switch(type){
-       case "!": {
-           cout << " ! ";
+       case '!': {
+           cout << " !  ";
            break;
        }
-       case "P":{
-           cout << " P ";
-           break;
-       }
-       case "M": {
+       case 'M': {
            cout << "M" << positive << value << " ";
            break;
        }
-       case "S": {
+       case 'S': {
            cout << "S" << positive << value << " ";
            break;
        }
        
    }
-}
-int moveForward(node* &headNode, int spaces ){
-    for(int i = 0; i < spaces; i++)
-    {
-        if(headNode->next == NULL){
-            cout << "You hit a + " << headNode->value << '\n';
-            int addscore = headNode->value;
-            headNode = NULL;
-            return addscore;
-        }
-        headNode = headNode->next;
-    }
-        cout << "You hit a ";
-        printSquare(headNode->value) ;
-        cout << '\n';
-        return headNode->value;
-    
 }
 int moveBack(node* &headNode,node* firstNode, int numSquares ){
      
@@ -60,7 +46,7 @@ int moveBack(node* &headNode,node* firstNode, int numSquares ){
         if(headNode->prev == NULL){
             headNode = firstNode;
             cout << "You hit a ";
-            printSquare (headNode->value) ;
+            printSquare (headNode ->type, headNode->value) ;
             cout << '\n';
             return headNode->value;
             
@@ -68,36 +54,80 @@ int moveBack(node* &headNode,node* firstNode, int numSquares ){
             headNode = headNode->prev;
     }
     cout << "You hit a ";
-    printSquare (headNode->value);
+    printSquare (headNode->type, headNode->value);
     cout << '\n';
     return headNode->value;
 }
-void generateTypes(string types[], int size){
-    types[0] = "P";
-    for(int i = 1; i < size; i++){
+int moveForward(node* &headNode,node* firstNode, int spaces ){
+    for(int i = 0; i < spaces; i++)
+    {
+        if(headNode->next == NULL){
+            cout << "You hit a +" << headNode->value << '\n';
+            int addscore = headNode->value;
+            headNode = NULL;
+            return addscore;
+        }
+        headNode = headNode->next;
+    }
+    while(true)
+        {if(headNode->type == 'M'){
+            if(headNode ->value > 0)
+            {for(int i = 0; i< headNode->value; i++){
+                headNode = headNode->next;
+            }}
+            else{
+                moveBack(headNode, firstNode, spaces);
+                
+            }
+            }
+             else{
+                break;
+            }
+        
+            
+        }
+        cout << "You hit a ";
+        printSquare(headNode->type, headNode->value) ;
+        cout << '\n';
+        return headNode->value;
+    
+}
+ 
+void generateTypes(char (&types)[], int size){
+  
+    for(int i = 0; i < size; i++){
         int max = 100;
         int number = rand() % max;
         if(number >= 85){
-            types[i] = "!";
+            types[i] = '!';
         }
         else if(number <= 25){
-            types[i] = "M";
+            types[i] = 'M';
         }
         else{
-            types[i] = "S";
+            types[i] = 'S';
         }
+   
     }
 }
-void generateValues(int vals[], int size){
+void generateValues(int vals[], char types[], int size){
     
     for(int i = 0; i < size; i++)
     {
-        int subtract = rand() % 10;
-        int value = rand() % 10 - subtract;
-        if(value == 0){
-            value += 1;
+        char type = types[i];
+        if(type != '!')
+        {
+            int subtract = rand() % 10;
+            int value = rand() % 10 - subtract;
+            if(value == 0){
+                value += 1;
+            }
+            vals[i] = value;
         }
-        vals[i] = value;
+        else 
+        {
+            vals[i] = 0;
+        }
     }
 }
 
@@ -105,29 +135,30 @@ void printBoard(node* headNode,node* resetHead, node* last, node* resetLast, int
    headNode = resetHead;
     int row = size/4;
     int totalSpacesOnTop = (size/2) + (size/4) - 1 ;
-    //four  for the top beginning and end two characters and one for the extra space created in the print function
-    int difference =  totalSpacesOnTop - 5;
+    int difference =  totalSpacesOnTop - 1;
     //prints top row
     for(int i = 0; i < row; i++){
-        printSquare (headNode->value);
+ 
+        printSquare (headNode-> type, headNode->value);
+   
         headNode = headNode ->next;
         size -=1;
     }
     cout << '\n';
     //prints sides
     for(int i = size; i > row; i-=2){
-        printSquare (last-> value);
+        printSquare (last->type,last-> value);
         for(int i = 0; i < difference; i++){
             cout << " ";
         }
-        printSquare (headNode-> value);
+        printSquare (headNode ->type, headNode-> value);
         last = last->prev;
         headNode = headNode->next;
         cout << '\n';
     }
     //prints bottom row
     for(int i = 0; i < row; i++){
-        printSquare (last->value);
+        printSquare (last->type, last->value);
         last = last->prev;
     }
     cout << '\n';
@@ -148,7 +179,9 @@ int main() {
     }
  
     int values[squares];
-    generateValues(values, squares);
+    char types[squares];
+    generateTypes(types, squares);
+    generateValues(values,types, squares);
  
     for(int i = squares; i > 0; i-- ){
      
@@ -156,6 +189,7 @@ int main() {
             if(i == squares){
                 result = new node();
                 result->value = values[i - 1];
+                result->type = types[i -1];
                 result->position = i;
                 result ->prev = NULL;
                 head = result;
@@ -167,6 +201,7 @@ int main() {
             else{
             result = new node();
             result->value = values[i -1];
+            result->type = types[i-1];
             result->position = i;
             result->prev = temp;
             temp-> next = result;
@@ -190,7 +225,7 @@ int main() {
                  int moves = rand() % 6 + 1;
                  
                  cout << "You rolled a " <<  moves << '\n';
-                 int addToScore = moveForward(head, moves);
+                 int addToScore = moveForward(head,copyOfHead, moves);
                  
                  playerScore+= addToScore;
                  if(head != NULL){
