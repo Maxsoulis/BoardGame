@@ -93,7 +93,7 @@ int moveForward(node* &headNode,node* firstNode, int spaces ){
     
 }
  
-void generateTypes(char (&types)[], int size){
+void generateTypes(char types[], int size){
   
     for(int i = 0; i < size; i++){
         int max = 100;
@@ -169,20 +169,21 @@ int main() {
     node* temp;
     node* last = NULL ;
     node* head = NULL;
-    node* copyOfHead;
+    node* firstNode;
     node* copyOfLast;
     node* result  ;
+    // regulates board size
     int squares = 24;
     if((squares % 4 != 0) || squares >= 100 || squares < 16 ){
         cout << "Error, Invalid Size" << '\n';
         return 0;
     }
- 
+    // sets up the value and type generation
     int values[squares];
     char types[squares];
     generateTypes(types, squares);
     generateValues(values,types, squares);
- 
+    //sets up the doubly linked list
     for(int i = squares; i > 0; i-- ){
      
             
@@ -193,10 +194,8 @@ int main() {
                 result->position = i;
                 result ->prev = NULL;
                 head = result;
-                copyOfHead = result;
+                firstNode = result;
                 temp = result;
-                
-                
             }
             else{
             result = new node();
@@ -206,16 +205,18 @@ int main() {
             result->prev = temp;
             temp-> next = result;
             temp = result; 
-            }
+            temp->next = result;
             last = temp;
+            }
     }
     copyOfLast = last;
     char rollDice;
     int playerScore = 0;
     int previousValue = head->value;
-     
+     //main game loop
     while(head != NULL){
-         printBoard(head , copyOfHead, last,copyOfLast , squares);
+        
+         printBoard(head , firstNode, last,copyOfLast , squares);
          cout << "Score: " << playerScore << '\n';
          while(true){
             cout << "Enter r to roll the dice" << '\n';
@@ -225,7 +226,7 @@ int main() {
                  int moves = rand() % 6 + 1;
                  
                  cout << "You rolled a " <<  moves << '\n';
-                 int addToScore = moveForward(head,copyOfHead, moves);
+                 int addToScore = moveForward(head,firstNode, moves);
                  
                  playerScore+= addToScore;
                  if(head != NULL){
@@ -236,10 +237,6 @@ int main() {
                  break;
              }
          }
-      
-         
     }
-    
-
     return 0;
 }
