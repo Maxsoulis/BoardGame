@@ -69,6 +69,7 @@ int moveForward(node* &headNode,node* firstNode, int spaces ){
         }
         headNode = headNode->next;
     }
+    // checking if the next square type is a move tile
     while(true)
         {if(headNode->type == 'M'){
             if(headNode ->value > 0)
@@ -163,9 +164,41 @@ void printBoard(node* headNode,node* resetHead, node* last, node* resetLast, int
     }
     cout << '\n';
 }
+double specialSquare(char type){
+    if(type == '!'){
+        cout << "Do you want to double your score and risk it all?" << '\n';
+        char doubleOrNothingInput;
+        cout << "(y/n) "; 
+        while(true)
+        {
+            cin >> doubleOrNothingInput;
+            if(doubleOrNothingInput == 'y'){
+                double multiplyTwo = 2;
+                double dividedTwo = 0.5;
+                int chance = rand() % 10;
+                if(chance >=7){
+                    return dividedTwo;
+                }
+            else{
+                return multiplyTwo;
+            }
+             
+        }
+        else if(doubleOrNothingInput == 'n'){
+            return 1;
+        }
+        else {
+            cout << "Enter (y/n) ";
+        }
+            
+        }
+    }
+    else {
+        return 1;
+    }
+}
 int main() {
     srand((unsigned) time(NULL));
- 
     node* temp;
     node* last = NULL ;
     node* head = NULL;
@@ -185,19 +218,17 @@ int main() {
     generateValues(values,types, squares);
     //sets up the doubly linked list
     for(int i = squares; i > 0; i-- ){
-     
-            
-            if(i == squares){
-                result = new node();
-                result->value = values[i - 1];
-                result->type = types[i -1];
-                result->position = i;
-                result ->prev = NULL;
-                head = result;
-                firstNode = result;
-                temp = result;
+        if(i == squares){
+            result = new node();
+            result->value = values[i - 1];
+            result->type = types[i -1];
+            result->position = i;
+            result ->prev = NULL;
+            head = result;
+            firstNode = result;
+            temp = result;
             }
-            else{
+        else{
             result = new node();
             result->value = values[i -1];
             result->type = types[i-1];
@@ -227,7 +258,8 @@ int main() {
                  
                  cout << "You rolled a " <<  moves << '\n';
                  int addToScore = moveForward(head,firstNode, moves);
-                 
+                 if(head ->type = '!'){
+                 }
                  playerScore+= addToScore;
                  if(head != NULL){
                  previousValue = head->value;
