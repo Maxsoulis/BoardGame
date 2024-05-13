@@ -72,7 +72,23 @@ int moveBack(node* &headNode,node* firstNode, int numSquares ){
     cout << '\n';
     return headNode->value;
 }
-void generateValues(int(&vals)[], int size){
+void generateTypes(string types[], int size){
+    types[0] = "P";
+    for(int i = 1; i < size; i++){
+        int max = 100;
+        int number = rand() % max;
+        if(number >= 85){
+            types[i] = "!";
+        }
+        else if(number <= 25){
+            types[i] = "M";
+        }
+        else{
+            types[i] = "S";
+        }
+    }
+}
+void generateValues(int vals[], int size){
     
     for(int i = 0; i < size; i++)
     {
@@ -84,6 +100,7 @@ void generateValues(int(&vals)[], int size){
         vals[i] = value;
     }
 }
+
 void printBoard(node* headNode,node* resetHead, node* last, node* resetLast, int size){
    headNode = resetHead;
     int row = size/4;
