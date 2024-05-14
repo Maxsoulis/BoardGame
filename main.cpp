@@ -37,17 +37,14 @@ void printSquare(char type, int value){
            cout << "S" << positive << value << " ";
            break;
        }
-       
    }
 }
 int moveBack(node* &currentNode,node* firstNode  ){
-    cout << currentNode->value << '\n';
     int value = currentNode->value;
     for(int i = 0; i >  value; value++){
-        cout << "Moving back 1" << '\n';
         if(currentNode->prev == NULL){
             currentNode = firstNode;
-            cout << "You hit a    ";
+            cout << "You hit a ";
             printSquare (currentNode ->type, currentNode->value) ;
             cout << '\n';
             return currentNode->value;
@@ -58,48 +55,48 @@ int moveBack(node* &currentNode,node* firstNode  ){
    
     return currentNode->value;
 }
-int moveForward(node* &headNode, node* firstNode, int spaces ){
+int moveForward(node* &currentNode, node* firstNode, int spaces ){
      
     int addscore = 0;
     for(int i = 0; i < spaces; i++)
     {
         
-        if(headNode->next == NULL){
-            cout << "You hit a +" << headNode->value << '\n';
-             addscore = headNode->value;
-            headNode = NULL;
+        if(currentNode->next == NULL){
+            cout << "You hit a +" << currentNode->value << '\n';
+            addscore = currentNode->value;
+            currentNode = NULL;
             return addscore;
         }
-        headNode = headNode->next;
+        currentNode = currentNode->next;
     }
     // checking if the next square type is a move tile
     while(true){
-        if(headNode->type == 'M'){
+        if(currentNode->type == 'M'){
             cout << "You hit a ";
-            printSquare(headNode->type, headNode->value);
+            printSquare(currentNode->type, currentNode->value);
             cout << '\n';
-            if(headNode ->value > 0){
-                int value = headNode ->value;
+            if(currentNode ->value > 0){
+                int value = currentNode ->value;
                 for(int i = 0; i < value; i++){
                 cout << "Moving 1" << '\n';
-                if(headNode->next == NULL)
+                if(currentNode->next == NULL)
                {    
-                   cout << "You hit a + "  << headNode->value << '\n';
-                   addscore = headNode->value;
-                   headNode = NULL;
+                   cout << "You hit a + "  << currentNode->value << '\n';
+                   addscore = currentNode->value;
+                   currentNode = NULL;
                    
                    return addscore;
                    
                }
                
-                   headNode = headNode -> next;
+                   currentNode = currentNode -> next;
                
             }
                 break;
             }
             else{
                
-                moveBack(headNode, firstNode);
+                moveBack(currentNode, firstNode);
                 break;
             }
         }
@@ -111,9 +108,9 @@ int moveForward(node* &headNode, node* firstNode, int spaces ){
     }
         
         cout << "You hit a ";
-        printSquare(headNode->type, headNode->value) ;
+        printSquare(currentNode->type,currentNode->value) ;
         cout << '\n';
-        addscore = headNode->value;
+        addscore = currentNode->value;
         return addscore;
     
 }
@@ -230,7 +227,7 @@ int main() {
     node* copyOfLast;
     node* result  ;
     // regulates board size
-    int squares = 44;
+    int squares = 16;
     if((squares % 4 != 0) || squares >= 100 || squares < 16 ){
         cout << "Error, Invalid Size" << '\n';
         return 0;
@@ -276,26 +273,32 @@ int main() {
         
          printBoard(head , firstNode, last,copyOfLast , squares);
          cout << "Score: " << playerScore << '\n';
-          double multiply = specialSquare(head->type);
-         
          while(true){
             cout << "Enter r to roll the dice" << '\n';
             cin >> rollDice;
             head->value = previousValue;
+             
              if(rollDice == 'r'){
-                 int moves = rand() % 6 + 1;
-                 cout << "You rolled a " <<  moves << '\n';
+                int moves = rand() % 6 + 1;
+                cout << "You rolled a " <<  moves << '\n';
                  
-                 int addToScore = moveForward(head,firstNode, moves);
-                  
-                 playerScore *= multiply;
-                 playerScore+= addToScore;
-                 if(head != NULL){
-                 previousValue = head->value;
-                 head->value = 0;}
-                 else{ cout << "Final Score" << playerScore;
-                 return 0;}
-                 break;
+                int addToScore = moveForward(head,firstNode, moves);
+                if(addToScore == 0){
+                    playerScore *= specialSquare(head->type);
+                }
+                else {
+                    playerScore += addToScore;
+                }
+                if(head != NULL){
+                
+                 
+                previousValue = head->value;
+                head->value = 0;}
+                else{ 
+                    cout << "Final Score" << playerScore;
+                    return 0;
+                }
+                break;
              }
          }
     }
